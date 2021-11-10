@@ -53,6 +53,10 @@ pre {
   color: #6f7a85;
 }
 
+#session-data {
+  font-size: 0.7rem;
+}
+
 pre::-webkit-scrollbar {
     width: 6px;
 }
@@ -106,4 +110,8 @@ pre::-webkit-scrollbar-thumb {
 
 .btn-primary:active {
   transform: translateY(1px);
+}
+
+.hidden {
+  display: none;
 }
