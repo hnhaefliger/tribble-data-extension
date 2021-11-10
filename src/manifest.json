@@ -1,0 +1,29 @@
+{
+    "name": "Tribble",
+    "description": "Collects data about how you learn online.",
+    "version": "0.1",
+    "manifest_version": 3,
+    "background": {
+        "service_worker": "js/background.js"
+    },
+    "permissions": [
+        "storage", 
+        "activeTab", 
+        "scripting"
+    ],
+    "action": {
+        "default_popup": "html/popup.html",
+        "default_icon": {
+            "16": "/images/icon225.png",
+            "32": "/images/icon225.png",
+            "48": "/images/icon225.png",
+            "128": "/images/icon225.png"
+        }
+    },
+    "icons": {
+        "16": "/images/icon225.png",
+        "32": "/images/icon225.png",
+        "48": "/images/icon225.png",
+        "128": "/images/icon225.png"
+    }
+}
