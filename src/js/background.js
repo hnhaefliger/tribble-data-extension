@@ -90,7 +90,7 @@ function handleMessage(message) {
       break;
 
     case 'reset':
-      saveData();
+      uploadData();
 
       resetSession();
       chrome.storage.local.set({sessionState: 'idle'}, () => {
@@ -109,4 +109,20 @@ function handleMessage(message) {
       saveListenerData(message.slice(1).join(' '));
       break;
   }
+}
+
+function uploadData() {
+  chrome.storage.local.get(['sessionName', 'sessionDescription', 'sessionData'], (data) => {
+    fetch('http://localhost:8000/api/session/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        name: data.sessionName,
+        description: data.sessionDescription,
+        data: data.sessionData
+      })
+    });
+  });
 }
