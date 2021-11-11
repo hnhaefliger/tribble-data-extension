@@ -9,6 +9,7 @@ cancelSection = document.getElementById('cancel-section');
 sessionState = 'idle';
 
 sessionName.addEventListener('input', (e) => {
+  console.log(e);
   chrome.storage.local.set({'sessionName': sessionName.value});
 });
 
@@ -48,7 +49,7 @@ chrome.runtime.onMessage.addListener((e) => {
 
 function handleMessage(message) {
   message = message.split(' ');
-  
+
   switch (message[0]) {
     case 'update':
       switch (message[1]) {

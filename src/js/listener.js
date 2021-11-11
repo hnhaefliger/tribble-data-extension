@@ -1,9 +1,3 @@
-// store data about:
-// scrolling
-// view time
-// input (security?)
-// highlighting
-
 scrollTimer = -1;
 resizeTimer = -1;
 

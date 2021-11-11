@@ -30,13 +30,18 @@ function updatePopup(scope='display') {
   chrome.runtime.sendMessage('update ' + scope);
 }
 
-function resetSession() {
-  chrome.storage.local.set({sessionName: ''});
-  chrome.storage.local.set({sessionDescription: ''});
-  chrome.storage.local.set({sessionState: 'idle'});
+function resetSession(text=true) {
+  if (text) {
+    chrome.storage.local.set({sessionName: ''});
+    chrome.storage.local.set({sessionDescription: ''});
+    chrome.storage.local.set({sessionState: 'idle'});
+  }
+  
   now = new Date();
+
   chrome.storage.local.set({sessionData: 'start ' + now.getTime()});
   sessionData = 'start ' + now.getTime();
+
   chrome.storage.local.set({sessionTime: now.getTime()});
 }
 
@@ -73,12 +78,10 @@ function saveListenerData(listenerData) {
 function handleMessage(message) {
   message = message.split(' ');
 
-  console.log(message);
-
   switch (message[0]) {
     case 'start':
-      resetSession();
       chrome.storage.local.set({sessionState: 'running'}, () => {
+        resetSession(text=false);
         updatePopup();
       });
       break;
