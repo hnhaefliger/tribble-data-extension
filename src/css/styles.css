@@ -45,19 +45,6 @@ body::-webkit-scrollbar-thumb {
   color: #fff;
 }
 
-pre {
-  margin: 0;
-  padding: 0;
-  max-height: 100px;
-  overflow-y: scroll;
-  overflow-x: hidden;
-  color: #6f7a85;
-}
-
-#session-data {
-  font-size: 0.7rem;
-}
-
 .form-control::-webkit-scrollbar {
     width: 6px;
 }
@@ -72,6 +59,23 @@ pre {
     box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
     border: none;
     border-radius: 3px;
+}
+
+#session-description {
+  overflow: hidden;
+}
+
+pre {
+  margin: 0;
+  padding: 0;
+  max-height: 100px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  color: #6f7a85;
+}
+
+#session-data {
+  font-size: 0.7rem;
 }
 
 .btn-primary {

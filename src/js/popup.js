@@ -9,11 +9,13 @@ cancelSection = document.getElementById('cancel-section');
 sessionState = 'idle';
 
 sessionName.addEventListener('input', (e) => {
-  console.log(e);
   chrome.storage.local.set({'sessionName': sessionName.value});
 });
 
 sessionDescription.addEventListener('input', (e) => {
+  sessionDescription.style.height = '1px';
+  sessionDescription.style.height = sessionDescription.scrollHeight + 'px';
+
   chrome.storage.local.set({'sessionDescription': sessionDescription.value});
 });
 
@@ -68,9 +70,14 @@ function handleMessage(message) {
 function updateDisplay() {
   chrome.storage.local.get(['sessionState', 'sessionName', 'sessionDescription', 'sessionData'], function(result) {
     sessionName.value = result.sessionName;
+
     sessionDescription.value = result.sessionDescription;
+    sessionDescription.style.height = '1px';
+    sessionDescription.style.height = sessionDescription.scrollHeight + 'px';
+
     sessionData.innerHTML = result.sessionData;
     sessionData.scrollTop = sessionData.scrollHeight;
+    
     sessionState = result.sessionState
 
     switch (sessionState) {
