@@ -8,7 +8,8 @@
     },
     "permissions": [
         "storage", 
-        "tabs"
+        "tabs",
+        "scripting"
     ],
     "action": {
         "default_popup": "html/popup.html",
@@ -24,5 +25,17 @@
         "32": "/images/icon225.png",
         "48": "/images/icon225.png",
         "128": "/images/icon225.png"
-    }
+    },
+    "content_scripts": [
+        {
+            "matches": ["<all_urls>"],
+            "js": ["js/injector.js"]
+        }
+    ],
+    "web_accessible_resources": [
+        {
+            "resources": ["js/listener.js"],
+            "matches": ["<all_urls>"]
+        }
+    ]
 }

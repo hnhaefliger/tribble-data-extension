@@ -19,18 +19,18 @@ sessionDescription.addEventListener('input', (e) => {
 sessionStart.addEventListener('click', (e) => {
   e.preventDefault();
 
-  if (sessionState === 'idle') {
-    chrome.runtime.sendMessage('start');
+  switch (sessionState){
+    case 'idle':
+      chrome.runtime.sendMessage('start');
+      break;
 
-  } else {
-    if (sessionState === 'running') {
+    case 'running':
       chrome.runtime.sendMessage('end');
+      break;
 
-    } else {
-      if (sessionState === 'pending') {
-        chrome.runtime.sendMessage('reset');
-      }
-    }
+    case 'pending':
+      chrome.runtime.sendMessage('reset');
+      break;
   }
 });
 
@@ -38,7 +38,7 @@ sessionCancel.addEventListener('click', (e) => {
   e.preventDefault();
 
   if (sessionState === 'pending') {
-    chrome.runtime.sendMessage('reset');
+    chrome.runtime.sendMessage('cancel');
   }
 });
 
@@ -48,15 +48,19 @@ chrome.runtime.onMessage.addListener((e) => {
 
 function handleMessage(message) {
   message = message.split(' ');
+  
+  switch (message[0]) {
+    case 'update':
+      switch (message[1]) {
+        case 'display':
+          updateDisplay();
+          break;
 
-  if (message[0] === 'update') {
-    if (message[1] === 'display') {
-      updateDisplay();
-    } else {
-      if (message[1] === 'data') {
-        updateData();
+        case 'data':
+          updateData();
+          break;
       }
-    }
+      break;
   }
 }
 
@@ -68,27 +72,27 @@ function updateDisplay() {
     sessionData.scrollTop = sessionData.scrollHeight;
     sessionState = result.sessionState
 
-    if (sessionState === 'idle') {
-      sessionIcon.classList.add('ion-ios-barcode-outline');
-      sessionStart.innerHTML = 'Start session';
-      cancelSection.classList.add('hidden');
-      dataSection.classList.add('hidden');
+    switch (sessionState) {
+      case 'idle':
+        sessionIcon.classList.add('ion-ios-barcode-outline');
+        sessionStart.innerHTML = 'Start session';
+        cancelSection.classList.add('hidden');
+        dataSection.classList.add('hidden');
+        break;
 
-    } else {
-      if (sessionState === 'running') {
+      case 'running':
         sessionIcon.classList.add('ion-ios-eye-outline');
         sessionStart.innerHTML = 'End session';
         cancelSection.classList.add('hidden');
         dataSection.classList.remove('hidden');
+        break;
 
-      } else {
-        if (sessionState === 'pending') {
-          sessionIcon.classList.add('ion-ios-cloud-upload-outline');
-          sessionStart.innerHTML = 'Confirm submission';
-          cancelSection.classList.remove('hidden');
-          dataSection.classList.remove('hidden');
-        }
-      }
+      case 'pending':
+        sessionIcon.classList.add('ion-ios-cloud-upload-outline');
+        sessionStart.innerHTML = 'Confirm submission';
+        cancelSection.classList.remove('hidden');
+        dataSection.classList.remove('hidden');
+        break;
     }
   });
 }
