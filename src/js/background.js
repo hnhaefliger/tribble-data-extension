@@ -10,7 +10,9 @@ chrome.runtime.onInstalled.addListener((e) => {
 });
 
 chrome.runtime.onMessage.addListener((e) => {
-  handleMessage(e);
+  if (e.receiver === 'tribble_data_background') {
+    handleMessage(e);
+  }
 });
 
 chrome.tabs.onActivated.addListener((e) => {
@@ -27,7 +29,12 @@ chrome.tabs.onUpdated.addListener((e) => {
 });
 
 function updatePopup(scope='display') {
-  chrome.runtime.sendMessage('update ' + scope);
+  chrome.runtime.sendMessage({
+    action: 'update',
+    data: scope,
+    receiver: 'tribble_data_popup',
+    sender: 'tribble_data_background',
+  });
 }
 
 function resetSession(text=true) {
@@ -76,9 +83,7 @@ function saveListenerData(listenerData) {
 }
 
 function handleMessage(message) {
-  message = message.split(' ');
-
-  switch (message[0]) {
+  switch (message.action) {
     case 'start':
       chrome.storage.local.set({sessionState: 'running'}, () => {
         resetSession(text=false);
@@ -108,8 +113,8 @@ function handleMessage(message) {
       });
       break;
 
-    case 'listener':
-      saveListenerData(message.slice(1).join(' '));
+    case 'record':
+      saveListenerData(message.data);
       break;
   }
 }

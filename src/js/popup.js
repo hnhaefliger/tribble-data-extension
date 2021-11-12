@@ -24,15 +24,27 @@ sessionStart.addEventListener('click', (e) => {
 
   switch (sessionState){
     case 'idle':
-      chrome.runtime.sendMessage('start');
+      chrome.runtime.sendMessage({
+        action: 'start',
+        receiver: 'tribble_data_background',
+        sender: 'tribble_data_popup',
+      });
       break;
 
     case 'running':
-      chrome.runtime.sendMessage('end');
+      chrome.runtime.sendMessage({
+        action: 'end',
+        receiver: 'tribble_data_background',
+        sender: 'tribble_data_popup',
+      });
       break;
 
     case 'pending':
-      chrome.runtime.sendMessage('reset');
+      chrome.runtime.sendMessage({
+        action: 'reset',
+        receiver: 'tribble_data_background',
+        sender: 'tribble_data_popup',
+      });
       break;
   }
 });
@@ -41,20 +53,24 @@ sessionCancel.addEventListener('click', (e) => {
   e.preventDefault();
 
   if (sessionState === 'pending') {
-    chrome.runtime.sendMessage('cancel');
+    chrome.runtime.sendMessage({
+      action: 'cancel',
+      receiver: 'tribble_data_background',
+      sender: 'tribble_data_popup',
+    });
   }
 });
 
 chrome.runtime.onMessage.addListener((e) => {
-  handleMessage(e);
+  if (e.receiver === 'tribble_data_popup') {
+    handleMessage(e);
+  }
 });
 
 function handleMessage(message) {
-  message = message.split(' ');
-
-  switch (message[0]) {
+  switch (message.action) {
     case 'update':
-      switch (message[1]) {
+      switch (message.data) {
         case 'display':
           updateDisplay();
           break;
@@ -68,17 +84,17 @@ function handleMessage(message) {
 }
 
 function updateDisplay() {
-  chrome.storage.local.get(['sessionState', 'sessionName', 'sessionDescription', 'sessionData'], function(result) {
-    sessionName.value = result.sessionName;
+  chrome.storage.local.get(['sessionState', 'sessionName', 'sessionDescription', 'sessionData'], (data) => {
+    sessionName.value = data.sessionName;
 
-    sessionDescription.value = result.sessionDescription;
+    sessionDescription.value = data.sessionDescription;
     sessionDescription.style.height = '1px';
     sessionDescription.style.height = sessionDescription.scrollHeight + 'px';
 
-    sessionData.innerHTML = result.sessionData;
+    sessionData.innerHTML = data.sessionData;
     sessionData.scrollTop = sessionData.scrollHeight;
     
-    sessionState = result.sessionState
+    sessionState = data.sessionState
 
     switch (sessionState) {
       case 'idle':
@@ -106,8 +122,8 @@ function updateDisplay() {
 }
 
 function updateData() {
-  chrome.storage.local.get(['sessionData'], function(result) {
-    sessionData.innerHTML = result.sessionData;
+  chrome.storage.local.get(['sessionData'], (data) => {
+    sessionData.innerHTML = data.sessionData;
   });
 }
 

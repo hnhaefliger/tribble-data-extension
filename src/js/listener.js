@@ -12,7 +12,12 @@ window.addEventListener('resize', (e) => {
 
 
 function sendScroll() {
-    window.postMessage('listener scroll ' + window.scrollX + ' ' + window.scrollY, '*');
+    window.postMessage({
+        action: 'record',
+        data: 'scroll ' + window.scrollX + ' ' + window.scrollY,
+        receiver: 'tribble_data_injector',
+        sender: 'tribble_data_listener',
+    });
 }
 
 function onScroll() {
@@ -24,7 +29,12 @@ function onScroll() {
 }
 
 function sendWindowSize() {
-    window.postMessage('listener window ' + window.innerWidth + ' ' + window.innerHeight, '*');
+    window.postMessage({
+        action: 'record',
+        data: 'window ' + window.innerWidth + ' ' + window.innerHeight,
+        receiver: 'tribble_data_injector',
+        sender: 'tribble_data_listener',
+    });
 }
 
 function onResize() {
