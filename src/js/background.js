@@ -99,11 +99,6 @@ function handleMessage(message) {
 
     case 'reset':
       uploadData();
-
-      resetSession();
-      chrome.storage.local.set({sessionState: 'idle'}, () => {
-        updatePopup();
-      });
       break;
 
     case 'cancel':
@@ -121,16 +116,23 @@ function handleMessage(message) {
 
 function uploadData() {
   chrome.storage.local.get(['sessionName', 'sessionDescription', 'sessionData'], (data) => {
-    fetch('http://localhost:8000/api/session/', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        name: data.sessionName,
-        description: data.sessionDescription,
-        data: data.sessionData
-      })
-    });
+    if (!(data.sessionName.length < 1 || data.sessionName.length > 128 || data.sessionDescription.length < 32 || data.sessionDescription.length > 512)) {
+      fetch('http://localhost:8000/api/session/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          name: data.sessionName,
+          description: data.sessionDescription,
+          data: data.sessionData
+        })
+      }).then((r) => {
+        resetSession();
+        chrome.storage.local.set({sessionState: 'idle'}, () => {
+          updatePopup();
+        });
+      });
+    }
   });
 }

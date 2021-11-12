@@ -8,11 +8,18 @@ sessionCancel = document.getElementById('session-cancel');
 cancelSection = document.getElementById('cancel-section');
 sessionState = 'idle';
 
+sessionNameWarning = document.getElementById('session-name-warning');
+sessionDescriptionWarning = document.getElementById('session-description-warning');
+
 sessionName.addEventListener('input', (e) => {
+  checkSessionNameErrors();
+
   chrome.storage.local.set({'sessionName': sessionName.value});
 });
 
 sessionDescription.addEventListener('input', (e) => {
+  checkSessionDescriptionErrors();
+
   sessionDescription.style.height = '1px';
   sessionDescription.style.height = sessionDescription.scrollHeight + 'px';
 
@@ -86,10 +93,12 @@ function handleMessage(message) {
 function updateDisplay() {
   chrome.storage.local.get(['sessionState', 'sessionName', 'sessionDescription', 'sessionData'], (data) => {
     sessionName.value = data.sessionName;
+    checkSessionNameErrors();
 
     sessionDescription.value = data.sessionDescription;
     sessionDescription.style.height = '1px';
     sessionDescription.style.height = sessionDescription.scrollHeight + 'px';
+    checkSessionDescriptionErrors();
 
     sessionData.innerHTML = data.sessionData;
     sessionData.scrollTop = sessionData.scrollHeight;
@@ -125,6 +134,34 @@ function updateData() {
   chrome.storage.local.get(['sessionData'], (data) => {
     sessionData.innerHTML = data.sessionData;
   });
+}
+
+function checkSessionNameErrors() {
+  if (sessionName.value.length < 1) {
+    sessionNameWarning.innerHTML = 'Session name must be at least 1 character long.';
+    sessionNameWarning.classList.remove('hidden');
+
+  } else if (sessionName.value.length > 128) {
+    sessionNameWarning.innerHTML = 'Session name must be no more than 128 characters long.';
+    sessionNameWarning.classList.remove('hidden');
+
+  } else {
+    sessionNameWarning.classList.add('hidden');
+  }
+}
+
+function checkSessionDescriptionErrors() {
+  if (sessionDescription.value.length < 32) {
+    sessionDescriptionWarning.innerHTML = 'Session description must be at least 32 characters long.';
+    sessionDescriptionWarning.classList.remove('hidden');
+
+  } else if (sessionDescription.value.length > 512) {
+    sessionDescriptionWarning.innerHTML = 'Session description must be no more than 512 characters long.';
+    sessionDescriptionWarning.classList.remove('hidden');
+
+  } else {
+    sessionDescriptionWarning.classList.add('hidden');
+  }
 }
 
 updateDisplay();

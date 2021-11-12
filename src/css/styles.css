@@ -120,3 +120,7 @@ pre {
 .hidden {
   display: none;
 }
+
+.text-danger {
+  margin: 0 10px;
+}

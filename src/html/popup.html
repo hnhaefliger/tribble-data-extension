@@ -16,9 +16,11 @@
         </div>
         <div class="mb-3">
             <input id="session-name" type="text" class="form-control shadow-none" placeholder="Session name" />
+            <p id="session-name-warning" class="form-text text-danger hidden">Please enter a valid session name (&gt0 and &lt128 characters).</p>
         </div>
         <div class="mb-3">
             <textarea id="session-description" class="form-control shadow-none" rows="1" placeholder="Session description"></textarea>
+            <p id="session-description-warning" class="form-text text-danger hidden">Please enter a valid session description (&gt32 and &lt512 characters).</p>
         </div>
         <div class="mb-3" id="data-section">
             <pre class="form-control" id="session-data">Recorded actions:</pre>
