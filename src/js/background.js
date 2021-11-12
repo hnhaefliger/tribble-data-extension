@@ -132,7 +132,14 @@ function uploadData() {
         chrome.storage.local.set({sessionState: 'idle'}, () => {
           updatePopup();
         });
-      });
+      }).catch((error) => {
+        chrome.runtime.sendMessage({
+          action: 'error',
+          data: 'Could not send session data to server.',
+          receiver: 'tribble_data_popup',
+          sender: 'tribble_data_background',
+        });
+      });;
     }
   });
 }

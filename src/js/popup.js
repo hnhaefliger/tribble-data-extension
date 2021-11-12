@@ -10,6 +10,7 @@ sessionState = 'idle';
 
 sessionNameWarning = document.getElementById('session-name-warning');
 sessionDescriptionWarning = document.getElementById('session-description-warning');
+sessionStartWarning = document.getElementById('session-start-warning');
 
 sessionName.addEventListener('input', (e) => {
   checkSessionNameErrors();
@@ -87,6 +88,10 @@ function handleMessage(message) {
           break;
       }
       break;
+
+    case 'error':
+      sessionStartWarning.innerHTML = message.data;
+      sessionStartWarning.classList.remove('hidden');
   }
 }
 
